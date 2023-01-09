@@ -1,17 +1,35 @@
 package logic;
 
 import java.nio.file.Path;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class AdaptivityModel {
+	private String id;
 	private String name;
 	private String description;
 	private String approach;
 	private String language;
 	private Path sourcePath;
+	private static AtomicInteger nextId = new AtomicInteger(0);
 	
+	private static String getNextId() {
+	  Integer next=nextId.incrementAndGet();
+	  return "MOD"+String.format("%05d",next);
+	}
+	
+	public AdaptivityModel(String id,String name, String description, String approach, String language, Path sourcePath) {
+		super();
+		this.id=id;
+		this.name = name;
+		this.description = description;
+		this.approach = approach;
+		this.language = language;
+		this.sourcePath = sourcePath;
+	}
 	
 	public AdaptivityModel(String name, String description, String approach, String language, Path sourcePath) {
 		super();
+		this.id=getNextId();
 		this.name = name;
 		this.description = description;
 		this.approach = approach;
@@ -50,6 +68,10 @@ public class AdaptivityModel {
 		this.sourcePath = sourcePath;
 	}
 	
+	public String getId() {
+		return id;
+	}
+
 	public boolean verifyModel() {
 		// Verify if the model is an instance of the Holistic Meta-Model for Adaptivity
 		// Load the holistic meta-model specification
@@ -61,7 +83,8 @@ public class AdaptivityModel {
 	
 	public String toString() {
 		String model2String="";
-		model2String="name "+this.name+"\n"+
+		model2String="id "+this.id+"\n"+
+					 "name "+this.name+"\n"+
 				     "description "+this.description+"\n"+
 				     "approach "+this.approach+"\n"+
 				     "language "+this.language+"\n"+

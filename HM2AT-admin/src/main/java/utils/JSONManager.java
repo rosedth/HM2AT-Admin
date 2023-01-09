@@ -60,14 +60,13 @@ public class JSONManager {
 		boolean result;
 		// From Java Object to txt (temporary file)
         try {
-            Files.writeString(Paths.get(path+"temp-model.txt"),model.toString(),
+            Files.writeString(Paths.get(path+"\\temp-model.txt"),model.toString(),
                               StandardCharsets.UTF_8);
         }
         catch (IOException ex) {
             System.out.print("Invalid Path");
         }
-        
-        
+           
 		ObjectMapper mapper = new ObjectMapper();
 		ObjectWriter writer = mapper.writer(new DefaultPrettyPrinter());
 		
@@ -76,7 +75,7 @@ public class JSONManager {
             String jsonInString = mapper.writeValueAsString(model);
             System.out.println(jsonInString);
             jsonInString="'"+jsonInString+"'";
-            appendJSON(path,jsonInString);
+            appendJSON(path+"\\temp-model.txt",path+"\\models.json");
             result=true;
 
         } catch (IOException e) {
@@ -99,7 +98,9 @@ public class JSONManager {
 			String outputStr = out.toString();
 			System.out.println(outputStr);
 		}
-		// System.out.println(Main.repository.toString());
+		// Update ModelID in configs
+		
 		JOptionPane.showMessageDialog(null, "Settings saved!");
+		
 	}
 }
