@@ -50,13 +50,13 @@ def retrieve_JSONfileProcess(filename,filename_out,propertyName):
     
     return file
 
-def update_JSONfile(filename,filename_out,dictionary,propertyName):
+def update_JSONfile(filename,filename_out,dictionary):
 #    dictionary = retrieve_JSONfile(filename, filename_out, propertyName)
     if  os.path.exists(filename_out):
         # loading the json file
         with open(filename_out,'r+') as file:
             file_data = json.load(file)
-            file_data[propertyName].append(dictionary)
+            file_data.append(dictionary)
             file.seek(0)
             json.dump(file_data, file, indent = 4)
     else:
@@ -64,7 +64,7 @@ def update_JSONfile(filename,filename_out,dictionary,propertyName):
         data={}
         models=[]
         models.append(dictionary)
-        data[propertyName]=models
+        data=models
         with open(sys.argv[2], 'w') as file:
             json.dump(data, file,indent=4, sort_keys = False)
     file.close()

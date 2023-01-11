@@ -1,10 +1,17 @@
 package utils;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import frames.Main;
 
 public class FileManager {
 
@@ -41,5 +48,43 @@ public class FileManager {
 
         Files.copy(fromFile, toFile, options);*/
 
+    }
+    
+    public static Map<String,Integer> readIndexes(String from){
+    	Map<String,Integer> indexes=new HashMap<>();
+    	Path path = Paths.get(from);
+    	List<String> allLines;
+		try {
+			allLines = Files.readAllLines(path);
+			for (String line : allLines) {
+				String [] part=line.split(":");
+				indexes.put(part[0].trim(),Integer.valueOf(part[1].trim()));
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	return indexes;
+    }
+    
+    public static void updateIndexes() {
+        File file = new File(Main.repository+"\\indexes.txt");
+        FileWriter fr = null;
+        try {
+            fr = new FileWriter(file);
+            for (String key : Main.indexes.keySet()) {
+                Integer value = Main.indexes.get(key);
+                fr.write(key+":"+value+"\n");
+         }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally{
+            //close resources
+            try {
+                fr.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

@@ -358,6 +358,7 @@ public class ModelPanel extends JPanel {
 		boolean saved=false;
 		boolean verified=false;
 		AdaptivityModel model=new AdaptivityModel(txtModelName.getText(), txtModelDesc.getText(), cbModelApproach.getSelectedItem().toString(), cbModelLanguage.getSelectedItem().toString(), Paths.get(txtModelSourcePath.getText()));
+		model.setId(AdaptivityModel.getNextId());
 		verified=model.verifyModel();
 		if (verified){
 			saved = JSONManager.saveModel(Main.repository+"\\models", model);			

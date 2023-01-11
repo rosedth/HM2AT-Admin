@@ -3,11 +3,12 @@ package frames;
 import java.awt.CardLayout;
 import java.awt.Toolkit;
 import java.nio.file.Path;
+import java.util.List;
+import java.util.Map;
 
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
@@ -15,6 +16,9 @@ import javaswingdev.drawer.Drawer;
 import javaswingdev.drawer.DrawerController;
 import javaswingdev.drawer.DrawerItem;
 import javaswingdev.drawer.EventDrawer;
+import logic.AdaptivityModel;
+import utils.FileManager;
+import utils.JSONManager;
 
 public class Main extends JFrame {
 	private DrawerController drawer;
@@ -30,6 +34,9 @@ public class Main extends JFrame {
 	private JPanel settingsPanel;
 
 	public static Path repository;
+	public static List<AdaptivityModel> models;
+	
+	public static Map<String,Integer> indexes;
 
 	/**
 	 * Create the frame.
@@ -51,6 +58,8 @@ public class Main extends JFrame {
 		 * Look for Repository
 		 */
 		 loadSettings();
+		 loadIndexes();
+		 loadData();
 
 		/**
 		 * Create the drawer menu.
@@ -90,8 +99,17 @@ public class Main extends JFrame {
 		chooserRepo.setModal(true);
 		chooserRepo.setLocationRelativeTo(null);
 		chooserRepo.setVisible(true);
-
+	}
+	
+	private void loadData() {
+		// load models from repository
+		Main.models=JSONManager.readModels();
 		
+	}
+	
+	private void loadIndexes() {
+		// load indexes from repository
+		Main.indexes=FileManager.readIndexes(Main.repository+"\\indexes.txt");
 	}
 
 	public DrawerController createDisabledMenu() {
@@ -164,9 +182,14 @@ public class Main extends JFrame {
 			cardLayout.show(contentPane, "Settings");
 			break;
 		case 5:
+			updateIndexes();
 			this.dispose();
 			break;
 		}
+	}
+
+	private void updateIndexes() {
+		FileManager.updateIndexes();
 	}
 
 	public void processSelectedItemDisabled(int arg0, DrawerItem arg1) {

@@ -6,6 +6,7 @@ import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JOptionPane;
@@ -14,6 +15,7 @@ import org.python.util.PythonInterpreter;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
@@ -46,14 +48,20 @@ public class JSONManager {
 	}
 	
 	
-	public static void readModels() {
+	public static List<AdaptivityModel> readModels() {
+		List<AdaptivityModel> modelList = new ArrayList<AdaptivityModel>();
 		ObjectMapper objectMapper = new ObjectMapper();
-		try {
-			List<AdaptivityModel> modelList = objectMapper.readValue(new File("langs.json"),new  TypeReference<List<AdaptivityModel>>(){});
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		objectMapper.enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
+		File models_File=new File(Main.repository+"\\models\\models.json");
+		if (models_File.exists()){
+			try {
+				modelList = objectMapper.readValue(models_File,new  TypeReference<List<AdaptivityModel>>(){});
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}			
 		}
+		return modelList;
 	}	
 	
 	public static boolean saveModel(String path, AdaptivityModel model) {
@@ -76,6 +84,7 @@ public class JSONManager {
             System.out.println(jsonInString);
             jsonInString="'"+jsonInString+"'";
             appendJSON(path+"\\temp-model.txt",path+"\\models.json");
+            Main.indexes.replace("modelID", Main.indexes.get("modelID")+1);
             result=true;
 
         } catch (IOException e) {

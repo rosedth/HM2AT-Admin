@@ -3,6 +3,8 @@ package logic;
 import java.nio.file.Path;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import frames.Main;
+
 public class AdaptivityModel {
 	private String id;
 	private String name;
@@ -10,11 +12,15 @@ public class AdaptivityModel {
 	private String approach;
 	private String language;
 	private Path sourcePath;
-	private static AtomicInteger nextId = new AtomicInteger(0);
+
 	
-	private static String getNextId() {
-	  Integer next=nextId.incrementAndGet();
+	public static String getNextId() {
+	  Integer next=Main.indexes.get("modelID")+1;
 	  return "MOD"+String.format("%05d",next);
+	}
+	
+	public AdaptivityModel() {
+		super();
 	}
 	
 	public AdaptivityModel(String id,String name, String description, String approach, String language, Path sourcePath) {
@@ -29,7 +35,6 @@ public class AdaptivityModel {
 	
 	public AdaptivityModel(String name, String description, String approach, String language, Path sourcePath) {
 		super();
-		this.id=getNextId();
 		this.name = name;
 		this.description = description;
 		this.approach = approach;
@@ -70,6 +75,10 @@ public class AdaptivityModel {
 	
 	public String getId() {
 		return id;
+	}
+
+	public void setId(String id) {
+		this.id=id;
 	}
 
 	public boolean verifyModel() {
