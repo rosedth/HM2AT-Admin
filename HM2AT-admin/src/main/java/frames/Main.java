@@ -17,6 +17,9 @@ import javaswingdev.drawer.DrawerController;
 import javaswingdev.drawer.DrawerItem;
 import javaswingdev.drawer.EventDrawer;
 import logic.AdaptivityModel;
+import logic.AdaptivityModelImplementation;
+import logic.ImplementationDependency;
+import logic.ImplementationExample;
 import utils.FileManager;
 import utils.JSONManager;
 
@@ -35,6 +38,9 @@ public class Main extends JFrame {
 
 	public static Path repository;
 	public static List<AdaptivityModel> models;
+	public static List<AdaptivityModelImplementation> implementations;
+	public static List<ImplementationDependency> dependencies;	
+	public static List<ImplementationExample> examples;
 	
 	public static Map<String,Integer> indexes;
 
@@ -104,7 +110,9 @@ public class Main extends JFrame {
 	private void loadData() {
 		// load models from repository
 		Main.models=JSONManager.readModels();
-		
+		Main.implementations=JSONManager.readImplementations();
+		Main.dependencies=JSONManager.readDependencies();
+		Main.examples=JSONManager.readExamples();
 	}
 	
 	private void loadIndexes() {

@@ -2,8 +2,13 @@ package utils;
 
 import java.lang.StackWalker.Option;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JComboBox;
+
+import frames.Main;
+import logic.AdaptivityModel;
+import logic.AdaptivityModelImplementation;
 
 public class ComboPopulator {
 
@@ -18,6 +23,21 @@ public class ComboPopulator {
 			combo.addItem(value);
 		}
 	}
+	
+	public static void populateAdaptivityModels(JComboBox<String> combo) {
+		List<AdaptivityModel> models= Main.models;
+		for (AdaptivityModel model : models) {
+			combo.addItem(model.getName());
+		}
+	}
+	
+	public static void populateAdaptivityModelImplementations(JComboBox<String> combo) {
+		List<AdaptivityModelImplementation> modelImplementations= Main.implementations;
+		for (AdaptivityModelImplementation implementation : modelImplementations) {
+			combo.addItem(implementation.getName());
+		}
+	}
+	
 	
 	public static void populateProgrammingLanguage(JComboBox<String> combo) {
 		ArrayList<String> options = new ArrayList<String>();

@@ -23,8 +23,9 @@ public class ModelSelectionPanel extends JPanel {
 	private boolean langFilter;
 	private boolean paraFilter;
 
-
+	private JComboBox cbModelName;
 	private JComboBox cbModelLanguage;
+	private JComboBox cbModelParadigm;
 	/**
 	 * Create the panel.
 	 */
@@ -32,32 +33,17 @@ public class ModelSelectionPanel extends JPanel {
 		
 		JLabel lblModelName = new JLabel("Name");
 		
-		JComboBox cbModelName = new JComboBox();
+		cbModelName = new JComboBox();
+		ComboPopulator.populateAdaptivityModelImplementations(cbModelName);
 		
 		JLabel lblModelLanguage = new JLabel("Language");
-		
-		cbModelLanguage = new JComboBox();
-		
-		JLabel lblModelParadigm = new JLabel("Paradigm");
-		
-		JComboBox cbModelParadigm = new JComboBox();
-		ComboPopulator.populateProgrammingParadigm(cbModelParadigm);
-		cbModelParadigm.addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent e) {
-				if(cbModelParadigm.getSelectedIndex()<=0) {
-					paraFilter=false;
-				}else {
-					paraFilter=true;
-				}
-				enableComponents(pane,namefilter&&langFilter&&paraFilter);
-			}
-		});
-		
+			
 		cbModelName.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				namefilter=true;
 			}
 		});
+		
 		cbModelName.addActionListener(new ActionListener() {
 			private boolean found = false;
 			public void actionPerformed(ActionEvent e) { 
@@ -77,6 +63,7 @@ public class ModelSelectionPanel extends JPanel {
 		});
 		cbModelName.setEditable(true);
 		
+		cbModelLanguage = new JComboBox();
 		ComboPopulator.populateProgrammingLanguage(cbModelLanguage);
 		cbModelLanguage.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
@@ -86,6 +73,21 @@ public class ModelSelectionPanel extends JPanel {
 					langFilter=true;
 				}
 				//filterCombo(cbModelName, langFilter,paraFilter);
+				enableComponents(pane,namefilter&&langFilter&&paraFilter);
+			}
+		});
+		
+		JLabel lblModelParadigm = new JLabel("Paradigm");
+		
+		cbModelParadigm = new JComboBox();
+		ComboPopulator.populateProgrammingParadigm(cbModelParadigm);
+		cbModelParadigm.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				if(cbModelParadigm.getSelectedIndex()<=0) {
+					paraFilter=false;
+				}else {
+					paraFilter=true;
+				}
 				enableComponents(pane,namefilter&&langFilter&&paraFilter);
 			}
 		});

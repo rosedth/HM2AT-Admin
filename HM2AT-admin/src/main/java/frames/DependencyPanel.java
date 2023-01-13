@@ -8,7 +8,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.StringReader;
+import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -24,21 +33,57 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.xml.XMLConstants;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import javaswingdev.drawer.DrawerController;
+import logic.AdaptivityModelImplementation;
+import logic.ImplementationDependency;
 import utils.ComboPopulator;
+import utils.JSONManager;
 
 public class DependencyPanel extends JPanel {
 	private DrawerController drawer;
 	private CardLayout cardLayout;
 	
-	private JComboBox cbModelParadigm;
-	private JComboBox cbModelLanguage;
+	// Elements of Implementation Panel
+	private JComboBox cbImplementationName;
+	private JComboBox cbImplementationParadigm;
+	private JComboBox cbImplementationLanguage;
 	private boolean namefilter;
 	private boolean langFilter;
 	private boolean paraFilter;
-	private List<String> models;
+	
+	// Elements of Dependency Panel
 	private JPanel dependencyPanel;
+	private JComboBox cbDependencyManager;
+	private JTextArea textArea;
+	
+	// Verification properties
+	private boolean hasImplementation;
+	protected boolean hasManager;
+	protected boolean hasDependency;
+	
+	protected String selectedManager;
+	private AdaptivityModelImplementation selectedImplementation;
+
+	
+
 	
 
 	/**
@@ -75,12 +120,16 @@ public class DependencyPanel extends JPanel {
 		lblNewCode.setFont(new Font("Tahoma", Font.BOLD, 14));
 		
 		JPanel modelPanel = new JPanel();
-		modelPanel.setBorder(new TitledBorder(null, "Model", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		modelPanel.setBorder(new TitledBorder(null, "Implementation", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		
 		JButton btnSave = new JButton("Save");
+		btnSave.setEnabled(false);
 		btnSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(null, "Dependency saved!");
+				boolean result = submitDependency();
+				if (result) {
+					clearDependencyPanel();
+				}
 			}
 		});
 		
@@ -134,7 +183,21 @@ public class DependencyPanel extends JPanel {
 					.addGap(23))
 		);
 		
-		JComboBox cbDependencyManager = new JComboBox();
+		cbDependencyManager = new JComboBox();
+		cbDependencyManager.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				if (e.getStateChange() == ItemEvent.SELECTED) {
+					if(cbDependencyManager.getSelectedItem()!="---") {
+						selectedManager = cbDependencyManager.getSelectedItem().toString();
+						hasManager = true;					
+					}else {
+						selectedManager="";
+						hasManager=false;						
+					}
+					btnSave.setEnabled(hasDependency&&hasManager&&hasImplementation);
+				}
+			}
+		});
 		cbDependencyManager.setEnabled(false);
 		ComboPopulator.populateDependencyManager(cbDependencyManager);
 		cbDependencyManager.setMaximumRowCount(4);
@@ -191,58 +254,87 @@ public class DependencyPanel extends JPanel {
 					.addContainerGap(28, Short.MAX_VALUE))
 		);
 		
-		JTextArea textArea = new JTextArea();
+		textArea = new JTextArea();
 		textArea.setEnabled(false);
+		textArea.getDocument().addDocumentListener(new DocumentListener() {
+			public void changedUpdate(DocumentEvent e) {
+				changed();
+			}
+
+			public void removeUpdate(DocumentEvent e) {
+				changed();
+			}
+
+			public void insertUpdate(DocumentEvent e) {
+				changed();
+			}
+
+			public void changed() {
+				if (textArea.getText().isBlank()) {
+					hasDependency = false;
+				} else {
+					hasDependency = true;
+				}
+				btnSave.setEnabled(hasDependency&&hasManager&&hasImplementation);
+			}
+		});
+		
 		scrollPane.setViewportView(textArea);
 		dependencyPanel.setLayout(gl_dependencyPanel);
 		
 		JLabel lblLibraryModelName = new JLabel("Name");
-		JComboBox cbModelName = new JComboBox();
-		cbModelName.addItemListener(new ItemListener() {
+		cbImplementationName = new JComboBox();
+		ComboPopulator.populateAdaptivityModelImplementations(cbImplementationName);
+		cbImplementationName.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
+				if (e.getStateChange() == ItemEvent.SELECTED) {
+					selectedImplementation = Main.implementations.get(cbImplementationName.getSelectedIndex());
+					hasImplementation = true;
+					enableComponents(dependencyPanel, true);
+				}
 				namefilter=true;
 			}
 		});
-		cbModelName.addActionListener(new ActionListener() {
+		cbImplementationName.addActionListener(new ActionListener() {
 			private boolean found = false;
 			public void actionPerformed(ActionEvent e) { 
-			String s = (String) cbModelName.getSelectedItem();
-            for (int i = 0; i < cbModelName.getItemCount(); i++) {
-                if (cbModelName.getItemAt(i).toString().equals(s)) {
+			String s = (String) cbImplementationName.getSelectedItem();
+            for (int i = 0; i < cbImplementationName.getItemCount(); i++) {
+                if (cbImplementationName.getItemAt(i).toString().equals(s)) {
                     found = true;
                     break;
                 }
             }
             if (!found) {
                 System.out.println("Added: " + s);
-                cbModelName.addItem(s);
+                cbImplementationName.addItem(s);
             }
             found = false;
         }
 		});
-		cbModelName.setEditable(true);
+		cbImplementationName.setEditable(true);
 		
 		JLabel lblLibraryLanguage = new JLabel("Language");
-		cbModelLanguage = new JComboBox();
-		ComboPopulator.populateProgrammingLanguage(cbModelLanguage);
-		cbModelLanguage.addItemListener(new ItemListener() {
+		cbImplementationLanguage = new JComboBox();
+		ComboPopulator.populateProgrammingLanguage(cbImplementationLanguage);
+		cbImplementationLanguage.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
-				if(cbModelLanguage.getSelectedIndex()==-1) {
+				if(cbImplementationLanguage.getSelectedIndex()==-1) {
 					langFilter=false;
 				}else {
 					langFilter=true;
 				}
-				filterCombo(cbModelName, langFilter,paraFilter);
+				filterCombo(cbImplementationName, langFilter,paraFilter);
 				enableComponents(dependencyPanel,namefilter&&langFilter&&paraFilter);
 			}
 		});
 		
 		JLabel lblLibraryParadigm = new JLabel("Paradigm");
-		cbModelParadigm = new JComboBox();
-		ComboPopulator.populateProgrammingParadigm(cbModelParadigm);
-		cbModelParadigm.addItemListener(new ItemListener() {
+		cbImplementationParadigm = new JComboBox();
+		ComboPopulator.populateProgrammingParadigm(cbImplementationParadigm);
+		cbImplementationParadigm.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
-				if(cbModelParadigm.getSelectedIndex()==-1) {
+				if(cbImplementationParadigm.getSelectedIndex()==-1) {
 					paraFilter=false;
 				}else {
 					paraFilter=true;
@@ -263,10 +355,10 @@ public class DependencyPanel extends JPanel {
 								.addComponent(lblLibraryParadigm))
 							.addGap(47)
 							.addGroup(gl_modelPanel.createParallelGroup(Alignment.LEADING)
-								.addComponent(cbModelName, 0, 418, Short.MAX_VALUE)
+								.addComponent(cbImplementationName, 0, 418, Short.MAX_VALUE)
 								.addGroup(gl_modelPanel.createParallelGroup(Alignment.TRAILING, false)
-									.addComponent(cbModelLanguage, Alignment.LEADING, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-									.addComponent(cbModelParadigm, Alignment.LEADING, 0, 192, Short.MAX_VALUE)))
+									.addComponent(cbImplementationLanguage, Alignment.LEADING, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+									.addComponent(cbImplementationParadigm, Alignment.LEADING, 0, 192, Short.MAX_VALUE)))
 							.addContainerGap())
 						.addGroup(gl_modelPanel.createSequentialGroup()
 							.addComponent(lblLibraryLanguage)
@@ -277,16 +369,16 @@ public class DependencyPanel extends JPanel {
 				.addGroup(gl_modelPanel.createSequentialGroup()
 					.addContainerGap()
 					.addGroup(gl_modelPanel.createParallelGroup(Alignment.BASELINE)
-						.addComponent(cbModelName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(cbImplementationName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(lblLibraryModelName))
 					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addGroup(gl_modelPanel.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblLibraryLanguage)
-						.addComponent(cbModelLanguage, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(cbImplementationLanguage, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addGap(18)
 					.addGroup(gl_modelPanel.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblLibraryParadigm)
-						.addComponent(cbModelParadigm, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(cbImplementationParadigm, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addContainerGap(21, Short.MAX_VALUE))
 		);
 		modelPanel.setLayout(gl_modelPanel);
@@ -294,6 +386,100 @@ public class DependencyPanel extends JPanel {
 		enableComponents(dependencyPanel, false);
 	}
 	
+	private boolean submitDependency() {
+		boolean saved = false;
+		String dependencyId=ImplementationDependency.getNextId();
+		String xml2line=XMLtoLine(textArea.getText());
+		//String xmlFile=saveDependencyToXML();
+		ImplementationDependency dependency = new ImplementationDependency("[Dependency]"+selectedImplementation.getName(),selectedImplementation.getId(),
+				selectedManager,xml2line,Paths.get(""));
+		dependency.setId(dependencyId);
+		saved = JSONManager.saveDependency(Main.repository + "\\dependencies", dependency);
+		JOptionPane.showMessageDialog(null, selectResultMessage(saved));
+		return saved;
+	}
+	
+	private String XMLtoLine(String xmlFile) {
+		String xmlLine="";
+//		StringBuilder sb=new StringBuilder();
+//
+//		try {
+//			BufferedReader br = new BufferedReader(new FileReader(new File(xmlFile)));
+//			String line;
+//			while((line=br.readLine())!= null){
+//			    sb.append(line.trim());
+//			}
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		return sb.toString();
+        List<String> lines = Arrays.stream(xmlFile.split("\\r?\\n"))
+                .map(x -> x.trim())
+                .filter(x -> x.length() > 0)
+                .collect(Collectors.toList());
+
+        for (String line : lines) {
+            System.out.println(line);
+            xmlLine=xmlLine+line;
+            //xmlLine.concat(line);
+        }
+        System.out.println(xmlLine);
+        return xmlLine;
+	}
+	private String saveDependencyToXML() {
+		String filename=Main.repository + "\\dependencies\\pom.xml";
+	    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+	    DocumentBuilder builder;
+	    
+		try {
+		    factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+			builder = factory.newDocumentBuilder();
+		    Document doc = builder.parse(new InputSource(new StringReader(textArea.getText())));
+		    
+		    // Write the parsed document to an xml file
+		    TransformerFactory transformerFactory = TransformerFactory.newInstance();
+		    Transformer transformer = transformerFactory.newTransformer(new StreamSource(new File(System.getProperty("user.dir")+ "\\scripts\\format.xslt")));
+		    //transformerFactory.setAttribute("indent-number", 4);
+		    transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+		    transformer.setOutputProperty(OutputKeys.STANDALONE, "no");
+		    transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+		    transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");	
+		    transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+		    DOMSource source = new DOMSource(doc);
+		    FileOutputStream output = new FileOutputStream(filename);
+		    StreamResult result =  new StreamResult(output);
+		    transformer.transform(source, result);
+		    output.close();
+		} catch (ParserConfigurationException | TransformerException | SAXException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return filename;
+	} 
+
+	private String selectResultMessage(boolean result) {
+		String msg;
+		if (result) {
+			msg = "<html><font color='green'>Dependency submitted sucessfully!</font></html>";
+		} else {
+			msg = "<html><font color='red'>Error while attempting submitting the dependency!</font></html>";
+		}
+		return msg;
+	}
+
+	private void filterCombo(JComboBox cbModelName, boolean langFilter2, boolean paraFilter2) {
+		// TODO Auto-generated method stub
+	}
+	
+	private void clearDependencyPanel() {
+		cbImplementationLanguage.setSelectedIndex(0);
+		cbImplementationParadigm.setSelectedIndex(0);
+		cbImplementationName.setSelectedIndex(0);
+		cbDependencyManager.setSelectedIndex(0);
+		textArea.setText("");
+	}
 
     public void enableComponents(Container container, boolean enable) {
         Component[] components = container.getComponents();
@@ -305,29 +491,6 @@ public class DependencyPanel extends JPanel {
         }
     }
 
-	private void filterCombo(JComboBox cbModelName, boolean langFilter2, boolean paraFilter2) {
-		// TODO Auto-generated method stub
-		
-		
-	}
 
-	private void loadComboFromFile(JComboBox combo, String path) {
-		
-	}
-	
-//	private String[] populateModelLanguage() {
-//		// TODO Auto-generated method stub
-//		String[] options = { "---", "Java", "C#", "C++", "C", "Other" };
-//		return options;
-//	}
-//
-//	private String[] populateModelParadigm() {
-//		// TODO Auto-generated method stub
-//		String[] options = { "---", "Object-oriented", "Service-oriented", "Aspect-oriented", "Declarative", "Other" };
-//		return options;
-//	}
-	
-	private void populateModel() {
-		
-	}
+
 }

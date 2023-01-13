@@ -15,18 +15,19 @@ repository = sys.argv[3]
 dictionary = retrieve_JSONfile(filename)
 
 # create implementation folder
-modId = dictionary["id"]
-modDir = os.path.join(repository, modId)
-os.mkdir(modDir)
+depId = dictionary["id"]
+depDir = os.path.join(repository, depId)
+os.mkdir(depDir)
+
 
 # copy sources and script
 src=dictionary["sourcePath"]
-copySource(src, modDir)
+copySource(src, depDir)
+os.remove(src)
 
-newSource = modDir +'\\'+ os.path.basename(src)
+newSource = depDir +'\\'+ os.path.basename(src)
 print("New Source:", newSource)
 
 # update Json file
 dictionary["sourcePath"] = newSource
-print("dictionary[sourcePath]:", dictionary['sourcePath'])
 update_JSONfile(filename,filename_out, dictionary)

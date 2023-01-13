@@ -70,11 +70,17 @@ public class FileManager {
     public static void updateIndexes() {
         File file = new File(Main.repository+"\\indexes.txt");
         FileWriter fr = null;
+        int line=1;
         try {
             fr = new FileWriter(file);
             for (String key : Main.indexes.keySet()) {
-                Integer value = Main.indexes.get(key);
-                fr.write(key+":"+value+"\n");
+                
+            	Integer value = Main.indexes.get(key);
+                fr.write(key+":"+value);
+            	if(line!=4) {
+            		fr.write(System.lineSeparator());          		
+            	}
+                line+=1;
          }
         } catch (IOException e) {
             e.printStackTrace();
