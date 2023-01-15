@@ -100,7 +100,9 @@ public class Main extends JFrame {
 	}
 
 	private void loadSettings() {
-		WorkingRepositoryDialog chooserRepo=new WorkingRepositoryDialog(this);
+		//look for ".metadata" to suggest previous configurations
+		String metadata=FileManager.loadMetadata();
+		WorkingRepositoryDialog chooserRepo=new WorkingRepositoryDialog(this,metadata);
 		chooserRepo.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		chooserRepo.setModal(true);
 		chooserRepo.setLocationRelativeTo(null);

@@ -7,6 +7,10 @@ import java.awt.Container;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.io.File;
 import java.nio.file.Paths;
 
@@ -23,18 +27,13 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingConstants;
+import javax.swing.border.TitledBorder;
 
 import javaswingdev.drawer.DrawerController;
 import logic.AdaptivityModelImplementation;
 import logic.ImplementationExample;
 import utils.ComboPopulator;
 import utils.JSONManager;
-
-import javax.swing.border.TitledBorder;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.ItemEvent;
 
 public class ExamplePanel extends JPanel {
 	private DrawerController drawer;
@@ -184,6 +183,8 @@ public class ExamplePanel extends JPanel {
 				if (e.getStateChange() == ItemEvent.SELECTED) {
 					selectedImplementation = Main.implementations.get(cbImplementationName.getSelectedIndex());
 					hasImplementation = true;
+					cbImplementationLang.setSelectedItem(selectedImplementation.getProgrammingLang());;
+					cbImplementationParadigm.setSelectedItem(selectedImplementation.getParadigm());
 					enableComponents(panelExample, true);
 				}
 				namefilter=true;
@@ -491,4 +492,5 @@ public class ExamplePanel extends JPanel {
 		}
 		btnExampleSubmit.setEnabled(hasExampleName && hasExampleLang&& hasExampleSourcePath);
 	}
+	
 }

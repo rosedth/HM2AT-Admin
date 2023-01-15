@@ -33,7 +33,7 @@ public class WorkingRepositoryDialog extends JDialog {
 	 */
 	public static void main(String[] args) {
 		try {
-			WorkingRepositoryDialog dialog = new WorkingRepositoryDialog(new Main());
+			WorkingRepositoryDialog dialog = new WorkingRepositoryDialog(new Main(),"");
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -44,7 +44,7 @@ public class WorkingRepositoryDialog extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public WorkingRepositoryDialog(Main parent) {
+	public WorkingRepositoryDialog(Main parent,String metadata) {
 		setBounds(100, 100, 485, 202);
 		getContentPane().setLayout(new BorderLayout());
 		setTitle("Choose the location of the working repository");
@@ -62,7 +62,7 @@ public class WorkingRepositoryDialog extends JDialog {
 		btnRepositorySearch = new JButton("");
 		btnRepositorySearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				showSearchRepositoryDialog();
+				showSearchRepositoryDialog(metadata);
 			}
 		});
 		btnRepositorySearch.setIcon(imgSearch);
@@ -110,18 +110,30 @@ public class WorkingRepositoryDialog extends JDialog {
 			}
 			{
 				JButton cancelButton = new JButton("Cancel");
+				cancelButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						WorkingRepositoryDialog.this.parent.dispose();
+						dispose();
+					}
+				});
 				cancelButton.setActionCommand("Cancel");
 				buttonPane.add(cancelButton);
 			}
 		}
 	}
 	
-	public void showSearchRepositoryDialog() {
+	public void showSearchRepositoryDialog(String suggestedDirectory) {
 		txtRepositoryPath.setText("");
 		txtRepositoryPath.setEnabled(false);
-		JFileChooser fileChooser = new JFileChooser();
+		JFileChooser fileChooser;
+		if(suggestedDirectory.isBlank()) {
+			fileChooser = new JFileChooser();
+			fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+		}else {
+			fileChooser = new JFileChooser(suggestedDirectory);
+			fileChooser.setCurrentDirectory(new File(suggestedDirectory));
+		}
 		fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
 		fileChooser.setDialogTitle("Choose the Repository root folder");
 		int response = fileChooser.showOpenDialog(this);
 		if (response == JFileChooser.APPROVE_OPTION) {

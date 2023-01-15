@@ -93,4 +93,20 @@ public class FileManager {
             }
         }
     }
+    
+    public static String loadMetadata() {
+    	String metadata="";
+    	Path path = Paths.get(System.getProperty("user.dir")+"\\.metadata");
+    	
+    	if (Files.exists(path)) {
+    		try {
+    			metadata = Files.readAllLines(path).get(0);
+     		} catch (IOException e) {
+    			// TODO Auto-generated catch block
+    			e.printStackTrace();
+    		}
+        } 	
+
+    	return metadata;
+    }
 }

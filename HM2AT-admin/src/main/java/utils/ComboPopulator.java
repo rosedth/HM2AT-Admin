@@ -16,8 +16,8 @@ public class ComboPopulator {
 		ArrayList<String> options = new ArrayList<String>();
 		options.add("---");
 		options.add("UML");
-		options.add("Other 1");
-		options.add("Other 2");
+//		options.add("Other 1");
+//		options.add("Other 2");
 		
 		for (String value : options) {
 			combo.addItem(value);

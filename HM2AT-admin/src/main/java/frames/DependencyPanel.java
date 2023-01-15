@@ -289,6 +289,8 @@ public class DependencyPanel extends JPanel {
 			public void itemStateChanged(ItemEvent e) {
 				if (e.getStateChange() == ItemEvent.SELECTED) {
 					selectedImplementation = Main.implementations.get(cbImplementationName.getSelectedIndex());
+					cbImplementationLanguage.setSelectedItem(selectedImplementation.getProgrammingLang());;
+					cbImplementationParadigm.setSelectedItem(selectedImplementation.getParadigm());
 					hasImplementation = true;
 					enableComponents(dependencyPanel, true);
 				}
@@ -474,9 +476,9 @@ public class DependencyPanel extends JPanel {
 	}
 	
 	private void clearDependencyPanel() {
+		cbImplementationName.setSelectedIndex(0);
 		cbImplementationLanguage.setSelectedIndex(0);
 		cbImplementationParadigm.setSelectedIndex(0);
-		cbImplementationName.setSelectedIndex(0);
 		cbDependencyManager.setSelectedIndex(0);
 		textArea.setText("");
 	}
