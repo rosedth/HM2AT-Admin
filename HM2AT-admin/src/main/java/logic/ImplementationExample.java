@@ -1,6 +1,7 @@
 package logic;
 
 import java.nio.file.Path;
+import java.util.List;
 
 import frames.Main;
 
@@ -47,8 +48,8 @@ public class ImplementationExample {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public AdaptivityModelImplementation getImplementation() {
-		for (AdaptivityModelImplementation implementation : Main.implementations) {
+	public AdaptivityModelImplementation getImplementation(List<AdaptivityModelImplementation> implementations) {
+		for (AdaptivityModelImplementation implementation : implementations) {
 			if (implementation.getId().equals(this.implementationId)) {
 				return implementation;
 			}

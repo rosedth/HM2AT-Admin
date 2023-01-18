@@ -332,6 +332,8 @@ public class ModelPanel extends JPanel {
 		);
 
 		txtModelDesc = new JTextArea();
+		txtModelDesc.setWrapStyleWord(true);
+		txtModelDesc.setLineWrap(true);
 		scrollPane.setViewportView(txtModelDesc);
 		setLayout(gl_contentPane);
 		

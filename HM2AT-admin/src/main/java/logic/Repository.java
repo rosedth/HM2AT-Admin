@@ -8,12 +8,14 @@ public class Repository {
 	private String type;
 	private Path path;
 	private File config;
+	private Path scriptDir;
 	
 	public Repository() {};
-	public Repository(String type, Path path, File config) {
+	public Repository(String type, Path path, File config, Path scriptDir) {
 		this.type = type;
 		this.path = path;
 		this.config = config;
+		this.scriptDir=scriptDir;
 	}
 	
 	public String getType() {
@@ -34,6 +36,13 @@ public class Repository {
 	public void setConfig(File config) {
 		this.config = config;
 	}
+	public Path getScriptDir() {
+		return scriptDir;
+	}
+	public void setScriptDir(Path scriptDir) {
+		this.scriptDir = scriptDir;
+	}
+	
 	public static void verifyStructure(Repository repo) {
 
 		

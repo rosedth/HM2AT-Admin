@@ -43,6 +43,7 @@ public class SettingsPanel extends JPanel {
 	private JButton btnRepositorySearch;
 	private JButton btnSave;
 	private JButton btnUpdateIndexes;
+	private JTextField txtScriptsPath;
 	
 	public SettingsPanel(Main main, DrawerController drawer, CardLayout cardLayout, JPanel contentPane) {
 		setBounds(100, 100, 653, 559);
@@ -72,8 +73,8 @@ public class SettingsPanel extends JPanel {
 		/**
 		 * Create the panel.
 		 */
-		JPanel panel = new JPanel();
-		panel.setBorder(new TitledBorder(null, "General", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		JPanel panelRepository = new JPanel();
+		panelRepository.setBorder(new TitledBorder(null, "Repository", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 
 		JLabel lblSettings = new JLabel("Settings");
 		lblSettings.setFont(new Font("Tahoma", Font.BOLD, 14));
@@ -147,62 +148,126 @@ public class SettingsPanel extends JPanel {
 
 		btnUpdateIndexes = new JButton("Update Indexes");
 		btnUpdateIndexes.setEnabled(false);
+		
+		JPanel panelScripts = new JPanel();
+		panelScripts.setBorder(new TitledBorder(null, "Scripts", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 
 		GroupLayout groupLayout = new GroupLayout(this);
-		groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
-				.addGroup(groupLayout.createSequentialGroup().addContainerGap()
-						.addComponent(btnMenu, GroupLayout.PREFERRED_SIZE, 71, GroupLayout.PREFERRED_SIZE).addGap(224)
-						.addComponent(lblSettings).addContainerGap(291, Short.MAX_VALUE))
-				.addGroup(groupLayout.createSequentialGroup().addGroup(groupLayout
-						.createParallelGroup(Alignment.TRAILING)
-						.addGroup(groupLayout.createSequentialGroup().addContainerGap().addComponent(btnUpdateIndexes))
-						.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
-								.addGroup(groupLayout.createSequentialGroup().addContainerGap(60, Short.MAX_VALUE)
-										.addComponent(panel, GroupLayout.PREFERRED_SIZE, 526,
-												GroupLayout.PREFERRED_SIZE))
-								.addGroup(groupLayout.createSequentialGroup().addComponent(btnCancel)
-										.addPreferredGap(ComponentPlacement.RELATED).addComponent(btnSave))))
-						.addGap(67)));
-		groupLayout.setVerticalGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGroup(groupLayout.createSequentialGroup().addContainerGap(26, Short.MAX_VALUE)
-						.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING, false)
-								.addGroup(groupLayout.createSequentialGroup()
-										.addComponent(btnMenu, GroupLayout.PREFERRED_SIZE, 45,
-												GroupLayout.PREFERRED_SIZE)
-										.addGap(49))
-								.addGroup(groupLayout.createSequentialGroup().addComponent(lblSettings).addGap(33)))
-						.addPreferredGap(ComponentPlacement.RELATED)
-						.addComponent(panel, GroupLayout.PREFERRED_SIZE, 156, GroupLayout.PREFERRED_SIZE).addGap(18)
-						.addComponent(btnUpdateIndexes).addGap(175).addGroup(groupLayout
-								.createParallelGroup(Alignment.BASELINE).addComponent(btnSave).addComponent(btnCancel))
-						.addGap(27)));
+		groupLayout.setHorizontalGroup(
+			groupLayout.createParallelGroup(Alignment.TRAILING)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(btnMenu, GroupLayout.PREFERRED_SIZE, 71, GroupLayout.PREFERRED_SIZE)
+					.addGap(224)
+					.addComponent(lblSettings)
+					.addContainerGap(291, Short.MAX_VALUE))
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addContainerGap()
+							.addComponent(btnUpdateIndexes))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addContainerGap(60, Short.MAX_VALUE)
+							.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
+								.addComponent(panelScripts, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+								.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING, false)
+									.addGroup(groupLayout.createSequentialGroup()
+										.addComponent(btnCancel)
+										.addPreferredGap(ComponentPlacement.RELATED)
+										.addComponent(btnSave))
+									.addComponent(panelRepository, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 526, Short.MAX_VALUE)))))
+					.addGap(67))
+		);
+		groupLayout.setVerticalGroup(
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addContainerGap(43, Short.MAX_VALUE)
+					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING, false)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addComponent(btnMenu, GroupLayout.PREFERRED_SIZE, 45, GroupLayout.PREFERRED_SIZE)
+							.addGap(49))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addComponent(lblSettings)
+							.addGap(33)))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(panelRepository, GroupLayout.PREFERRED_SIZE, 128, GroupLayout.PREFERRED_SIZE)
+					.addGap(18)
+					.addComponent(panelScripts, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addGap(29)
+					.addComponent(btnUpdateIndexes)
+					.addGap(74)
+					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+						.addComponent(btnSave)
+						.addComponent(btnCancel))
+					.addGap(27))
+		);
+		
+		JLabel lblScripts = new JLabel("Location");
+		
+		txtScriptsPath = new JTextField();
+		txtScriptsPath.setColumns(10);
+		
+		JButton btnScriptSearch = new JButton("");
+		btnScriptSearch.setIcon(imgSearch);
+		
+		GroupLayout gl_panelScripts = new GroupLayout(panelScripts);
+		gl_panelScripts.setHorizontalGroup(
+			gl_panelScripts.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panelScripts.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(lblScripts)
+					.addGap(18)
+					.addComponent(txtScriptsPath, GroupLayout.PREFERRED_SIZE, 389, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
+					.addComponent(btnScriptSearch, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap())
+		);
+		gl_panelScripts.setVerticalGroup(
+			gl_panelScripts.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panelScripts.createSequentialGroup()
+					.addGap(24)
+					.addGroup(gl_panelScripts.createParallelGroup(Alignment.TRAILING)
+						.addComponent(btnScriptSearch, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
+						.addGroup(gl_panelScripts.createParallelGroup(Alignment.BASELINE)
+							.addComponent(lblScripts)
+							.addComponent(txtScriptsPath, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+					.addContainerGap(29, Short.MAX_VALUE))
+		);
+		panelScripts.setLayout(gl_panelScripts);
 
-		GroupLayout gl_panel = new GroupLayout(panel);
-		gl_panel.setHorizontalGroup(gl_panel.createParallelGroup(Alignment.LEADING).addGroup(gl_panel
-				.createSequentialGroup().addContainerGap()
-				.addGroup(gl_panel
-						.createParallelGroup(Alignment.LEADING).addComponent(lblRepository).addComponent(lblRepoType))
-				.addGap(18)
-				.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-						.addComponent(cbRepoType, GroupLayout.PREFERRED_SIZE, 419, GroupLayout.PREFERRED_SIZE)
-						.addGroup(gl_panel.createSequentialGroup()
-								.addComponent(txtRepositoryPath, GroupLayout.PREFERRED_SIZE, 387,
-										GroupLayout.PREFERRED_SIZE)
-								.addPreferredGap(ComponentPlacement.RELATED).addComponent(btnRepositorySearch,
-										GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE)))
-				.addContainerGap(17, Short.MAX_VALUE)));
-		gl_panel.setVerticalGroup(gl_panel.createParallelGroup(Alignment.LEADING).addGroup(gl_panel
-				.createSequentialGroup().addContainerGap()
-				.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE).addComponent(lblRepoType).addComponent(
-						cbRepoType, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-				.addGap(25)
-				.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING)
-						.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE).addComponent(lblRepository)
-								.addComponent(txtRepositoryPath, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-										GroupLayout.PREFERRED_SIZE))
+		GroupLayout gl_panelRepository = new GroupLayout(panelRepository);
+		gl_panelRepository.setHorizontalGroup(
+			gl_panelRepository.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panelRepository.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(gl_panelRepository.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblRepoType)
+						.addComponent(lblRepository))
+					.addGap(18)
+					.addGroup(gl_panelRepository.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_panelRepository.createSequentialGroup()
+							.addComponent(txtRepositoryPath, GroupLayout.PREFERRED_SIZE, 387, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
+							.addComponent(btnRepositorySearch, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE))
+						.addComponent(cbRepoType, 0, 426, Short.MAX_VALUE))
+					.addContainerGap())
+		);
+		gl_panelRepository.setVerticalGroup(
+			gl_panelRepository.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panelRepository.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(gl_panelRepository.createParallelGroup(Alignment.BASELINE)
+						.addComponent(lblRepoType)
+						.addComponent(cbRepoType, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addGap(25)
+					.addGroup(gl_panelRepository.createParallelGroup(Alignment.TRAILING)
+						.addGroup(gl_panelRepository.createParallelGroup(Alignment.BASELINE)
+							.addComponent(txtRepositoryPath, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addComponent(lblRepository))
 						.addComponent(btnRepositorySearch))
-				.addContainerGap(67, Short.MAX_VALUE)));
-		panel.setLayout(gl_panel);
+					.addContainerGap(33, Short.MAX_VALUE))
+		);
+		panelRepository.setLayout(gl_panelRepository);
 		setLayout(groupLayout);
 	}
 
@@ -288,5 +353,4 @@ public class SettingsPanel extends JPanel {
 	public JButton getBtnUpdateIndexes() {
 		return btnUpdateIndexes;
 	}
-
 }

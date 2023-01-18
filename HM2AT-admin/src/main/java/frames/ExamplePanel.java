@@ -46,6 +46,7 @@ public class ExamplePanel extends JPanel {
 	private JPanel panelImplementation;
 	private JComboBox cbImplementationName;
 	private JComboBox cbImplementationLang;
+	private JComboBox cbImplementationLang_1;
 	private JComboBox cbImplementationParadigm;
 	
 	// Elements of Example Panel
@@ -136,22 +137,23 @@ public class ExamplePanel extends JPanel {
 		gl_newExamplePanel.setHorizontalGroup(
 			gl_newExamplePanel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_newExamplePanel.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(btnMenu, GroupLayout.PREFERRED_SIZE, 71, GroupLayout.PREFERRED_SIZE)
-					.addGap(106)
-					.addComponent(lblExampleTitle, GroupLayout.PREFERRED_SIZE, 275, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(191, Short.MAX_VALUE))
-				.addGroup(gl_newExamplePanel.createSequentialGroup()
-					.addGap(38)
-					.addGroup(gl_newExamplePanel.createParallelGroup(Alignment.TRAILING, false)
-						.addComponent(panelExample, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-						.addComponent(panelImplementation, Alignment.LEADING, 0, 0, Short.MAX_VALUE)
-						.addGroup(Alignment.LEADING, gl_newExamplePanel.createSequentialGroup()
-							.addGap(408)
-							.addComponent(btnExampleCancel)
-							.addGap(18)
-							.addComponent(btnExampleSubmit)))
-					.addGap(67))
+					.addGroup(gl_newExamplePanel.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_newExamplePanel.createSequentialGroup()
+							.addContainerGap()
+							.addComponent(btnMenu, GroupLayout.PREFERRED_SIZE, 71, GroupLayout.PREFERRED_SIZE)
+							.addGap(106)
+							.addComponent(lblExampleTitle, GroupLayout.PREFERRED_SIZE, 275, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_newExamplePanel.createSequentialGroup()
+							.addGap(38)
+							.addGroup(gl_newExamplePanel.createParallelGroup(Alignment.LEADING, false)
+								.addComponent(panelImplementation, 0, 0, Short.MAX_VALUE)
+								.addGroup(gl_newExamplePanel.createSequentialGroup()
+									.addGap(408)
+									.addComponent(btnExampleCancel)
+									.addGap(18)
+									.addComponent(btnExampleSubmit))
+								.addComponent(panelExample, GroupLayout.PREFERRED_SIZE, 576, GroupLayout.PREFERRED_SIZE))))
+					.addContainerGap(39, Short.MAX_VALUE))
 		);
 		gl_newExamplePanel.setVerticalGroup(
 			gl_newExamplePanel.createParallelGroup(Alignment.LEADING)
@@ -211,9 +213,9 @@ public class ExamplePanel extends JPanel {
 		
 		JLabel lblImplementationLang = new JLabel("Language");
 		cbImplementationLang = new JComboBox();
-		cbImplementationLang = new JComboBox();
-		ComboPopulator.populateProgrammingLanguage(cbImplementationLang);
-		cbImplementationLang.addItemListener(new ItemListener() {
+		cbImplementationLang_1 = new JComboBox();
+		ComboPopulator.populateProgrammingLanguage(cbImplementationLang_1);
+		cbImplementationLang_1.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				if(cbImplementationLang.getSelectedIndex()==-1) {
 					langFilter=false;
@@ -243,35 +245,35 @@ public class ExamplePanel extends JPanel {
 		gl_panelModel.setHorizontalGroup(
 			gl_panelModel.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_panelModel.createSequentialGroup()
-					.addContainerGap(34, Short.MAX_VALUE)
+					.addContainerGap(35, Short.MAX_VALUE)
 					.addGroup(gl_panelModel.createParallelGroup(Alignment.TRAILING)
 						.addComponent(lblImplementationLang)
-						.addComponent(lblImplementationParadigm)
-						.addComponent(lblImplementationName))
-					.addGap(34)
-					.addGroup(gl_panelModel.createParallelGroup(Alignment.TRAILING)
-						.addComponent(cbImplementationName, 0, 411, Short.MAX_VALUE)
-						.addGroup(Alignment.LEADING, gl_panelModel.createParallelGroup(Alignment.TRAILING, false)
-							.addComponent(cbImplementationLang, Alignment.LEADING, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-							.addComponent(cbImplementationParadigm, Alignment.LEADING, 0, 240, Short.MAX_VALUE)))
-					.addContainerGap())
+						.addComponent(lblImplementationName)
+						.addComponent(lblImplementationParadigm))
+					.addGap(18)
+					.addGroup(gl_panelModel.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_panelModel.createParallelGroup(Alignment.LEADING, false)
+							.addComponent(cbImplementationName, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+							.addComponent(cbImplementationLang_1, 0, 426, Short.MAX_VALUE))
+						.addComponent(cbImplementationParadigm, GroupLayout.PREFERRED_SIZE, 236, GroupLayout.PREFERRED_SIZE))
+					.addContainerGap(19, Short.MAX_VALUE))
 		);
 		gl_panelModel.setVerticalGroup(
 			gl_panelModel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panelModel.createSequentialGroup()
 					.addContainerGap()
 					.addGroup(gl_panelModel.createParallelGroup(Alignment.BASELINE)
-						.addComponent(cbImplementationName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addComponent(lblImplementationName))
+						.addComponent(lblImplementationName)
+						.addComponent(cbImplementationName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addGroup(gl_panelModel.createParallelGroup(Alignment.BASELINE)
-						.addComponent(cbImplementationLang, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addComponent(lblImplementationLang))
+						.addComponent(lblImplementationLang)
+						.addComponent(cbImplementationLang_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addGap(18)
 					.addGroup(gl_panelModel.createParallelGroup(Alignment.BASELINE)
-						.addComponent(cbImplementationParadigm, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addComponent(lblImplementationParadigm))
-					.addContainerGap(25, Short.MAX_VALUE))
+						.addComponent(lblImplementationParadigm)
+						.addComponent(cbImplementationParadigm, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addContainerGap(27, Short.MAX_VALUE))
 		);
 		
 		panelImplementation.setLayout(gl_panelModel);
@@ -368,34 +370,30 @@ public class ExamplePanel extends JPanel {
 				.addGroup(gl_panel.createSequentialGroup()
 					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_panel.createSequentialGroup()
-							.addGap(28)
-							.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-								.addComponent(lblExampleSourcePath)
-								.addGroup(gl_panel.createSequentialGroup()
-									.addGap(26)
-									.addComponent(lblExampleName))
-								.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING)
-									.addComponent(lblExampleLanguage)
-									.addComponent(lblExampleDesc)))
-							.addGap(30)
+							.addGap(40)
 							.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING)
-								.addGroup(gl_panel.createSequentialGroup()
-									.addPreferredGap(ComponentPlacement.RELATED)
-									.addComponent(txtExampleSourcePath, GroupLayout.PREFERRED_SIZE, 361, GroupLayout.PREFERRED_SIZE)
+								.addComponent(lblExampleDesc)
+								.addComponent(lblExampleName)
+								.addComponent(lblExampleLanguage)
+								.addComponent(lblExampleSourcePath))
+							.addGap(18)
+							.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+								.addGroup(Alignment.TRAILING, gl_panel.createSequentialGroup()
+									.addComponent(txtExampleSourcePath, GroupLayout.DEFAULT_SIZE, 392, Short.MAX_VALUE)
 									.addPreferredGap(ComponentPlacement.RELATED)
 									.addComponent(btnExampleSourceSearch, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE))
 								.addGroup(gl_panel.createSequentialGroup()
 									.addComponent(cbExampleLanguage, GroupLayout.PREFERRED_SIZE, 168, GroupLayout.PREFERRED_SIZE)
-									.addPreferredGap(ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
+									.addPreferredGap(ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
 									.addComponent(lblExampleParadigm)
-									.addGap(26)
+									.addPreferredGap(ComponentPlacement.UNRELATED)
 									.addComponent(cbExampleParadigm, GroupLayout.PREFERRED_SIZE, 142, GroupLayout.PREFERRED_SIZE))
-								.addComponent(txtExampleDescription, 0, 0, Short.MAX_VALUE)
-								.addComponent(txtExampleName, GroupLayout.DEFAULT_SIZE, 409, Short.MAX_VALUE)))
+								.addComponent(txtExampleName)
+								.addComponent(txtExampleDescription, GroupLayout.PREFERRED_SIZE, 414, Short.MAX_VALUE)))
 						.addGroup(gl_panel.createSequentialGroup()
 							.addGap(140)
 							.addComponent(lblExampleNameError)))
-					.addContainerGap())
+					.addGap(24))
 		);
 		gl_panel.setVerticalGroup(
 			gl_panel.createParallelGroup(Alignment.LEADING)
@@ -411,19 +409,18 @@ public class ExamplePanel extends JPanel {
 						.addComponent(txtExampleDescription, GroupLayout.PREFERRED_SIZE, 43, GroupLayout.PREFERRED_SIZE)
 						.addComponent(lblExampleDesc))
 					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+					.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
+						.addComponent(cbExampleLanguage, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(cbExampleParadigm, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblExampleLanguage)
+						.addComponent(lblExampleParadigm))
+					.addGap(13)
+					.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING)
 						.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
-							.addComponent(cbExampleLanguage, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addComponent(lblExampleParadigm)
-							.addComponent(lblExampleLanguage)))
-					.addGap(18)
-					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
-							.addComponent(lblExampleSourcePath)
-							.addComponent(txtExampleSourcePath, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addComponent(txtExampleSourcePath, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addComponent(lblExampleSourcePath))
 						.addComponent(btnExampleSourceSearch))
-					.addGap(24))
+					.addGap(29))
 		);
 		panelExample.setLayout(gl_panel);
 		enableComponents(panelExample, false);
@@ -454,7 +451,7 @@ public class ExamplePanel extends JPanel {
 
 	private void clearExamplePanel() {
 		cbImplementationName.setSelectedIndex(0);
-		cbImplementationLang.setSelectedIndex(0);
+		cbImplementationLang_1.setSelectedIndex(0);
 		cbImplementationParadigm.setSelectedIndex(0);
 		
 		txtExampleName.setText("");

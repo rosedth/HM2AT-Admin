@@ -19,5 +19,7 @@ if not os.path.isdir(rootPath):
     os.mkdir(examplesDir)
     dependenciesDir= os.path.join(rootPath, 'dependencies')
     os.mkdir(dependenciesDir)
+    scriptsDir= os.path.join(rootPath, 'scripts')
+    os.mkdir(scriptsDir)
 else:
     print('The directory is present.')

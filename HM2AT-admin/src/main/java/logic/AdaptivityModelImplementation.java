@@ -1,6 +1,7 @@
 package logic;
 
 import java.nio.file.Path;
+import java.util.List;
 
 import frames.Main;
 
@@ -51,8 +52,8 @@ public class AdaptivityModelImplementation {
 		this.name = name;
 	}
 
-	public AdaptivityModel getModel() {
-	    for (AdaptivityModel model : Main.models) {
+	public AdaptivityModel getModel(List<AdaptivityModel> models) {
+	    for (AdaptivityModel model : models) {
 	        if (model.getId().equals(this.modelId)) {
 	            return model;
 	        }
